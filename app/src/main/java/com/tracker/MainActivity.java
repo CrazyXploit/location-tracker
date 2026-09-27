@@ -16,21 +16,28 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_CODE = 42;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
-    @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
+   @Override
+protected void onCreate(Bundle b) {
+    super.onCreate(b);
 
-        if (hasFineLocation()) {
-            startTracker();
-            finish();
-            return;
-        }
+    // Hide everything — we only want the permission dialog
+    getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    try {
+        getSupportActionBar().hide();
+    } catch (Exception ignored) { }
+    setContentView(new android.view.View(this));
 
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        }, REQ_CODE);
+    if (hasFineLocation()) {
+        startTracker();
+        finish();
+        return;
     }
+
+    ActivityCompat.requestPermissions(this, new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    }, REQ_CODE);
+}
 
     private boolean hasFineLocation() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
